@@ -34,7 +34,7 @@ export const navItems = [
 
 // --- About Section ---
 export const aboutContent = {
-  subtitle: "Get To Know Me",
+  subtitle: "Client platforms at work, my own tools the rest of the time",
   title: "About Me",
   paragraphs: [
     "I'm a Software Engineer with 2 years and 10 months of experience, based in Bengaluru. I work across the stack — interfaces in React and Next.js, APIs in Nest.js, and data layers on PostgreSQL and Supabase.",
@@ -278,9 +278,8 @@ export const socialLinks: SocialLink[] = [
 
 export const contactContent = {
   subtitle: "Let's Connect",
-  title: "Get In Touch",
-  description:
-    "I'm always open to discussing new projects, creative ideas, or opportunities",
+  title: "Where to reach me",
+  description: "Email is the fastest way to reach me.",
   ctaTitle: "Ready to start a project?",
   ctaDescription: "Drop me a message and let's make something amazing together",
   ctaText: "Send me a message",
