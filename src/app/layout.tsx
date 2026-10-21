@@ -1,7 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import ClientWrapper from "@/components/shared/ClientWrapper";
 import { personalInfo } from "@/lib/data";
 
 const geistSans = Geist({
@@ -28,12 +26,8 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: personalInfo.name }],
   icons: {
-    icon: [
-      { url: "/saitejasangisapu.jpg", sizes: "any" },
-      { url: "/saitejasangisapu.jpg", sizes: "32x32", type: "image/jpeg" },
-      { url: "/saitejasangisapu.jpg", sizes: "16x16", type: "image/jpeg" },
-    ],
-    apple: [{ url: "/saitejasangisapu.jpg", sizes: "180x180", type: "image/jpeg" }],
+    icon: [{ url: "/saitejasangisapu.jpg" }],
+    apple: [{ url: "/saitejasangisapu.jpg", sizes: "180x180" }],
     shortcut: "/saitejasangisapu.jpg",
   },
   openGraph: {
@@ -44,22 +38,30 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+    { media: "(prefers-color-scheme: dark)", color: "#151517" },
+  ],
+  colorScheme: "light dark",
+};
+
+const themeScript = `(function(){var t;try{t=localStorage.getItem("theme")}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}document.documentElement.setAttribute("data-theme",t)})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <link rel="icon" href="/saitejasangisapu.jpg" type="image/jpeg" />
-        <link rel="shortcut icon" href="/saitejasangisapu.jpg" type="image/jpeg" />
-        <link rel="apple-touch-icon" href="/saitejasangisapu.jpg" />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ClientWrapper>{children}</ClientWrapper>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        {children}
       </body>
     </html>
   );

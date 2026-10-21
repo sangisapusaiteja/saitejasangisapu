@@ -1,166 +1,141 @@
-"use client";
+import Link from "next/link";
+import SectionHeader from "@/components/shared/SectionHeader";
+import Reveal from "@/components/shared/Reveal";
+import { projects, experiences } from "@/lib/data";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { ExternalLink, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { projects } from "@/lib/data";
+const workCompanies = Array.from(
+  new Set(
+    projects
+      .filter((project) => project.type === "Work")
+      .map((project) => project.company)
+      .filter((company): company is string => Boolean(company))
+  )
+);
 
-interface Project {
-  title: string;
-  description: string;
-  tech: string[];
-  liveLink?: string;
-  githubLink?: string;
-  gradient: string;
+function tenureFor(company: string) {
+  const entry = experiences.find((item) => item.company.startsWith(company));
+  return entry?.duration.split("|")[0].trim();
 }
 
-interface ProjectCardProps {
-  project: Project;
-  index: number;
-  isInView: boolean;
-}
-
-function ProjectCard({ project, index, isInView }: ProjectCardProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ delay: index * 0.15, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-      whileHover={{ scale: 1.02, y: -8 }}
-      className="glass p-6 sm:p-8 rounded-2xl relative overflow-hidden group cursor-pointer will-change-transform"
-    >
-      {/* Gradient Border Animation */}
-      <div
-        className={`absolute inset-0 bg-gradient-to-r ${project.gradient} opacity-0 group-hover:opacity-20 transition-all duration-500 rounded-2xl blur-xl`}
-      />
-
-      {/* Subtle inner glow */}
-      <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-      <div className="relative z-10">
-        {/* Title */}
-        <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4 group-hover:gradient-text transition-all duration-300">
-          {project.title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6 leading-relaxed">
-          {project.description}
-        </p>
-
-        {/* Tech Stack Tags */}
-        <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
-          {project.tech.map((tech) => (
-            <span
-              key={tech}
-              className="px-3 py-1 text-xs font-semibold rounded-full bg-white/5 border border-white/10 text-gray-300 group-hover:border-primary/50 transition-colors duration-300"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        {/* Links */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          {project.liveLink && (
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="glass border-primary/50 hover:bg-primary/20 hover:border-primary transition-all duration-300 w-full sm:w-auto text-sm"
-            >
-              <a
-                href={project.liveLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Live Demo
-              </a>
-            </Button>
-          )}
-          {project.githubLink && (
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="glass border-white/20 hover:bg-secondary/20 hover:border-secondary transition-all duration-300 w-full sm:w-auto text-sm"
-            >
-              <a
-                href={project.githubLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github className="w-4 h-4 mr-2" />
-                Source Code
-              </a>
-            </Button>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
+const groups: {
+  label: string;
+  range?: string;
+  note?: string;
+  items: typeof projects;
+}[] = [
+  ...workCompanies.map((company) => ({
+    label: company,
+    range: tenureFor(company),
+    items: projects.filter((project) => project.company === company),
+  })),
+  {
+    label: "Personal",
+    note: "Tools I designed and built on my own time.",
+    items: projects.filter((project) => project.type === "Personal"),
+  },
+];
 
 export default function Projects() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section
-      id="projects"
-      className="relative py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8"
-    >
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8 }}
-        >
-          {/* Section Title */}
-          <div className="text-center mb-12 sm:mb-16">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-primary font-mono text-xs sm:text-sm md:text-base font-semibold uppercase tracking-wider"
-            >
-              Featured Work
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.3 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-2 gradient-text"
-            >
-              Projects
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-sm sm:text-base text-gray-400 mt-4 max-w-2xl mx-auto px-4"
-            >
-              A collection of projects showcasing my expertise in building
-              modern, scalable web applications
-            </motion.p>
-          </div>
+    <section id="projects" className="wrap py-20 sm:py-28">
+      <SectionHeader
+        index="03"
+        label="Projects"
+        title="Selected work"
+        lead="Client work and personal tools I've designed, built and shipped."
+      />
 
-          {/* Projects Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-            {projects.map((project, index) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                isInView={isInView}
-              />
-            ))}
+      {groups.map((group) => (
+        <div key={group.label} className="mt-14">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h3 className="font-mono text-xs uppercase tracking-[0.14em] text-faint">
+              {group.label}
+            </h3>
+            {group.range && (
+              <span className="font-mono text-xs text-faint/70">
+                {group.range}
+              </span>
+            )}
           </div>
-        </motion.div>
-      </div>
+          {group.note && <p className="mt-2 text-sm text-muted">{group.note}</p>}
+
+          <ul className="mt-5">
+            {group.items.map((project, index) => (
+              <li key={project.title} className="border-t border-border">
+                <Reveal>
+                  <div className="group -mx-5 grid gap-x-6 gap-y-3 px-5 py-7 transition-colors duration-200 hover:bg-surface-hover sm:grid-cols-[2.5rem_1fr_auto]">
+                    <div className="font-mono text-xs text-faint">
+                      {String(index + 1).padStart(2, "0")}
+                      {project.year && (
+                        <span className="mt-1 block text-faint/70">
+                          {project.year}
+                        </span>
+                      )}
+                    </div>
+
+                    <div>
+                      <h4 className="text-base font-medium sm:text-lg">
+                        {project.liveLink ? (
+                          <a
+                            href={project.liveLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-colors group-hover:text-accent"
+                          >
+                            {project.title}
+                            <span aria-hidden className="ml-1.5 text-faint">
+                              ↗
+                            </span>
+                          </a>
+                        ) : (
+                          project.title
+                        )}
+                      </h4>
+                      <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
+                        {project.description}
+                      </p>
+                      <p className="mt-3 font-mono text-xs text-faint">
+                        {project.tech.join(" · ")}
+                      </p>
+                    </div>
+
+                    <div className="flex gap-5 sm:flex-col sm:items-end sm:gap-2">
+                      {project.caseStudy && (
+                        <Link
+                          href={project.caseStudy}
+                          className="link font-mono text-xs"
+                        >
+                          Case study
+                        </Link>
+                      )}
+                      {project.liveLink && (
+                        <a
+                          href={project.liveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="link font-mono text-xs"
+                        >
+                          Live
+                        </a>
+                      )}
+                      {project.githubLink && (
+                        <a
+                          href={project.githubLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="link font-mono text-xs"
+                        >
+                          Code
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </section>
   );
 }

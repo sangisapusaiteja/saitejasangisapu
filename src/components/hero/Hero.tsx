@@ -1,139 +1,55 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { ArrowDown, Download, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import TypingAnimation from "./TypingAnimation";
+import Reveal from "@/components/shared/Reveal";
+import ProfileCard from "@/components/shared/ProfileCard";
 import { personalInfo } from "@/lib/data";
 
 export default function Hero() {
-  const scrollToProjects = () => {
-    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const scrollToContact = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const location = personalInfo.location ?? "Bengaluru, India";
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
-      {/* Animated gradient circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-        <div
-          className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        />
-      </div>
+    <section id="top" className="wrap pb-20 pt-32 sm:pb-28 sm:pt-40">
+      <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-start lg:gap-16">
+        <Reveal>
+          <p className="font-mono text-xs text-muted">~/saiteja-sangisapu</p>
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto text-center py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-6 sm:space-y-8  from-primary/10 to-secondary/10 p-8 rounded-3xl backdrop-blur-lg border border-white/20"
-        >
-          {/* Greeting */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-base sm:text-lg md:text-xl text-gray-400 font-mono"
-          >
-            {personalInfo.greeting}
-          </motion.p>
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+            {personalInfo.name}
+          </h1>
 
-          {/* Name with gradient */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-tight px-4"
-          >
-            <span className="gradient-text text-glow block">
-              {personalInfo.name}
-            </span>
-          </motion.h1>
+          <p className="mt-4 font-mono text-sm text-accent">
+            {personalInfo.roles[0]}
+            <span className="mx-2 text-faint">·</span>
+            <span className="text-muted">{location}</span>
+          </p>
 
-          {/* Typing Animation */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="flex justify-center min-h-12 sm:min-h-14"
-          >
-            <TypingAnimation roles={personalInfo.roles} />
-          </motion.div>
-
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed px-4"
-          >
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
             {personalInfo.description}
-          </motion.p>
+          </p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8 px-4"
-          >
-            <Button
-              onClick={scrollToProjects}
-              size="lg"
-              className="glass hover:shadow-glow-blue transition-all duration-300 text-sm sm:text-lg px-5 sm:px-8 py-4 sm:py-6 bg-primary/20 border border-primary/50 backdrop-blur-lg w-full sm:w-auto"
-            >
-              View Projects
-              <ArrowDown className="ml-2 h-5 w-5" />
-            </Button>
-
-            <Button
-              onClick={scrollToContact}
-              size="lg"
-              variant="outline"
-              className="glass hover:shadow-glow-purple text-sm sm:text-lg px-5 sm:px-8 py-4 sm:py-6 border-2 border-white/20 hover:border-primary/50 hover:bg-primary/10 backdrop-blur-lg transition-all duration-300 w-full sm:w-auto"
-            >
-              <Mail className="mr-2 h-5 w-5" />
-              Contact Me
-            </Button>
-
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="glass hover:shadow-glow-cyan text-sm sm:text-lg px-5 sm:px-8 py-4 sm:py-6 border-2 border-white/20 hover:border-secondary/50 hover:bg-secondary/10 backdrop-blur-lg transition-all duration-300 w-full sm:w-auto"
-            >
-              <a href={personalInfo.resumeUrl} download>
-                <Download className="mr-2 h-5 w-5" />
-                Resume
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild size="lg" variant="accent">
+              <a href="#projects">
+                View work
+                <span aria-hidden>↓</span>
               </a>
             </Button>
-          </motion.div>
+            <Button asChild size="lg">
+              <a href={personalInfo.resumeUrl} download>
+                Résumé
+              </a>
+            </Button>
+            <a
+              href={personalInfo.email}
+              className="link px-1 font-mono text-sm"
+            >
+              Email ↗
+            </a>
+          </div>
+        </Reveal>
 
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, y: [0, 10, 0] }}
-            transition={{
-              opacity: { delay: 1.2 },
-              y: {
-                repeat: Infinity,
-                duration: 2,
-                ease: "easeInOut",
-              },
-            }}
-            className="hidden sm:flex justify-center pt-12"
-          >
-            <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
-              <div className="w-1 h-2 bg-primary rounded-full animate-pulse" />
-            </div>
-          </motion.div>
-        </motion.div>
+        <Reveal delay={0.08}>
+          <ProfileCard />
+        </Reveal>
       </div>
     </section>
   );

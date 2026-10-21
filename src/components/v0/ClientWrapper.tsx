@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Navigation from "@/components/shared/Navigation";
-import CustomCursor from "@/components/shared/CustomCursor";
-import Loader from "@/components/shared/Loader";
-import SmoothScroll from "@/components/shared/SmoothScroll";
+import Navigation from "@/components/v0/Navigation";
+import CustomCursor from "@/components/v0/CustomCursor";
+import Loader from "@/components/v0/Loader";
+import SmoothScroll from "@/components/v0/SmoothScroll";
 
 export default function ClientWrapper({
   children,

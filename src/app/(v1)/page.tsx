@@ -7,7 +7,7 @@ import Contact from "@/components/contact/Contact";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main id="main">
       <Hero />
       <About />
       <TechStack />
